@@ -1,13 +1,13 @@
-import type { CollectionConfig } from 'payload'
+import type { CollectionConfig, Endpoint } from 'payload'
 
-import { authenticated } from '../../access/authenticated'
+import { anyone, authenticated, authenticatedAsAdmin } from '@/access'
 
 const Users: CollectionConfig = {
   slug: 'users',
   access: {
-    admin: authenticated,
-    create: authenticated,
-    delete: authenticated,
+    admin: authenticatedAsAdmin,
+    create: anyone,
+    delete: authenticatedAsAdmin,
     read: authenticated,
     update: authenticated,
   },
@@ -20,6 +20,28 @@ const Users: CollectionConfig = {
     {
       name: 'name',
       type: 'text',
+    },
+    {
+      name: 'userKind',
+      type: 'group',
+      fields: [
+        {
+          name: 'isAdmin',
+          type: 'checkbox',
+          label: 'Admin',
+          defaultValue: false,
+        },
+        {
+          name: 'isClient',
+          type: 'checkbox',
+          label: 'Client',
+          defaultValue: true,
+        },
+      ],
+      access: {
+        create: authenticatedAsAdmin,
+        update: authenticatedAsAdmin,
+      },
     },
   ],
   timestamps: true,

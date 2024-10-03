@@ -11,8 +11,8 @@ export const Orders: CollectionConfig = {
   },
   fields: [
     {
-      name: 'price', // required
-      type: 'number', // required
+      name: 'price',
+      type: 'number',
       required: true,
     },
     {

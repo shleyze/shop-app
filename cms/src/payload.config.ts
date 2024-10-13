@@ -10,6 +10,8 @@ import { Users } from '@/collections/Users'
 import { Media } from '@/collections/Media'
 import { Orders } from '@/collections/Orders'
 import { Goods } from '@/collections/Goods'
+import { Cities } from '@/collections/Cities'
+import { Stores } from '@/collections/Stores'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -21,7 +23,7 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Orders, Goods, Media, Users],
+  collections: [Orders, Goods, Media, Stores, Cities, Users],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {

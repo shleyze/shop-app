@@ -7,6 +7,8 @@ export const client = axios.create({
     "Content-Type": "application/json",
   },
   withCredentials: true,
+  // paramsSerializer: (params) =>
+  //   qs.stringify(params, { arrayFormat: "bracket", encode: false }),
 });
 
 client.interceptors.response.use(
@@ -50,7 +52,5 @@ export const openRouteClient = axios.create({
   headers: {
     Authorization: process.env.EXPO_PUBLIC_OPEN_ROUTE_SERVICE_API_TOKEN,
   },
-  paramsSerializer: (params) => {
-    return qs.stringify(params, { arrayFormat: "comma" });
-  },
+  paramsSerializer: (params) => qs.stringify(params, { arrayFormat: "comma" }),
 });

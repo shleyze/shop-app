@@ -1,17 +1,15 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { SafeAreaView, Alert } from "react-native";
+import { SafeAreaView, Alert, View } from "react-native";
 import {
   Button,
   Layout,
   Divider,
-  Spinner,
   Icon,
   Tab,
   TabView,
   type TabViewProps,
   Text,
 } from "@ui-kitten/components";
-import { View, AnimatePresence } from "moti";
 
 import type { Coordinates, CityStore } from "@/types";
 import { findNearestLocations } from "@/utils/findNearestLocationAndShop";
@@ -24,6 +22,8 @@ import { CustomStoreSelect } from "./CustomStoreSelect";
 import { MapStoreSelect } from "./MapStoreSelect";
 import type { UserLocationProps } from "./types";
 import { groupStoresByCity } from "@/utils/groupStoresByCity";
+import { Loader } from "@/components/Loader";
+import { useCart } from "@/hooks/useCart";
 
 export function UserLocation(props: UserLocationProps) {
   const [state, setState] = useState<{
@@ -45,6 +45,7 @@ export function UserLocation(props: UserLocationProps) {
   const selectedLocation = useUserStore((state) => state.selectedLocation);
   const nearestStore = useUserStore((state) => state.nearestStore);
   const isInDeliveryZone = useUserStore((state) => state.isInDeliveryZone);
+  const storeId = useUserStore((state) => state.storeId);
   const handleSetStoreId = useUserStore((state) => state.actions.setStoreId);
   const handleSetNearestData = useUserStore(
     (state) => state.actions.setNearestData,
@@ -53,20 +54,55 @@ export function UserLocation(props: UserLocationProps) {
     (state) => state.actions.setSelectedLocation,
   );
 
+  const isCartEmpty = useCart((state) => state.isCartEmpty);
+  const handleResetCart = useCart((state) => state.actions.resetCart);
+
   const handleStoreSelect = useCallback(
-    (storeId: CityStore["id"]) => {
-      handleSetStoreId(storeId);
+    (selectedStoreId: CityStore["id"]) => {
+      handleSetStoreId(selectedStoreId);
       const selectedStore = storesQuery.data?.docs.find(
         ({ id }) => storeId === id,
       );
 
-      if (selectedStore) {
-        handleSetSelectedLocation(selectedStore.coordinates);
+      function select() {
+        if (selectedStore) {
+          handleSetSelectedLocation(selectedStore.coordinates);
+        }
+
+        props.onStoreSelect?.();
       }
 
-      props.onStoreSelect?.();
+      if (isCartEmpty || storeId === selectedStoreId) {
+        select();
+      }
+
+      if (!isCartEmpty && storeId !== selectedStoreId) {
+        Alert.alert(
+          "Внимание!",
+          "При смене магазина, все товары в корзине будут утеряны.",
+          [
+            {
+              text: "Сменить магазин",
+              onPress: () => {
+                select();
+                handleResetCart();
+              },
+            },
+            {
+              text: "Отмена",
+            },
+          ],
+        );
+      }
     },
-    [handleSetStoreId, props.onStoreSelect, storesQuery.data],
+    [
+      handleSetStoreId,
+      props.onStoreSelect,
+      storesQuery.data,
+      isCartEmpty,
+      handleResetCart,
+      storeId,
+    ],
   );
 
   const handleTabChange: Exclude<TabViewProps["onSelect"], undefined> =
@@ -256,36 +292,7 @@ export function UserLocation(props: UserLocationProps) {
         </SafeAreaView>
       </Layout>
 
-      <AnimatePresence>
-        {state.isLoading && (
-          <View
-            from={{
-              opacity: 0,
-            }}
-            animate={{
-              opacity: 1,
-            }}
-            exit={{ opacity: 0 }}
-            exitTransition={{
-              type: "timing",
-              duration: 200,
-            }}
-            style={{
-              position: "absolute",
-              top: 0,
-              bottom: 0,
-              left: 0,
-              right: 0,
-              backgroundColor: "rgba(0, 0, 0, 0.2)",
-              zIndex: 1,
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <Spinner size="giant" />
-          </View>
-        )}
-      </AnimatePresence>
+      <Loader loading={state.isLoading} />
     </>
   );
 }

@@ -1,4 +1,10 @@
-import { useState, type ReactElement, useMemo } from "react";
+import {
+  useState,
+  type ReactElement,
+  useMemo,
+  useEffect,
+  useCallback,
+} from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import {
   Icon,
@@ -10,7 +16,9 @@ import {
   Modal,
   Card,
   Text,
+  Divider,
 } from "@ui-kitten/components";
+import { useRouter, usePathname } from "expo-router";
 
 import { LoginForm } from "@/components/LoginForm";
 import { useAuth } from "@/hooks/useAuth";
@@ -23,9 +31,13 @@ const UserIcon = (props: IconProps): IconElement => (
 );
 
 export function Header() {
+  const router = useRouter();
+  const pathname = usePathname();
+
   const email = useAuth((store) => store.email);
 
   const [modalVisible, setModalVisible] = useState(false);
+  const [canGoBack, setCanGoBack] = useState(false);
 
   const openModal = () => {
     setModalVisible(true);
@@ -42,14 +54,35 @@ export function Header() {
     return storesQuery.data?.docs.find((store) => store.id === storeId);
   }, [storesQuery.data, storeId]);
 
+  const renderLeftActions = useCallback((): ReactElement => {
+    if (!canGoBack) {
+      return <></>;
+    }
+
+    return (
+      <>
+        <TopNavigationAction
+          icon={(props) => <Icon {...props} name="arrow-ios-back-outline" />}
+          onPress={() => {
+            router.back();
+          }}
+          disabled={!canGoBack}
+        />
+      </>
+    );
+  }, [canGoBack, router.canGoBack, router.navigate]);
+
   const renderRightActions = (): ReactElement => (
     <>
       <TopNavigationAction icon={UserIcon} onPress={openModal} />
     </>
   );
 
+  useEffect(() => {
+    setCanGoBack(router.canGoBack());
+  }, [pathname, router.canGoBack]);
   return (
-    <Layout level="1">
+    <Layout style={{ paddingBottom: 8 }}>
       <TopNavigation
         alignment="center"
         title={
@@ -66,8 +99,10 @@ export function Header() {
             </Text>
           </TouchableOpacity>
         }
-        accessoryRight={renderRightActions}
+        accessoryLeft={renderLeftActions}
+        // accessoryRight={renderRightActions}
       />
+      <Divider />
 
       <Modal
         visible={modalVisible}

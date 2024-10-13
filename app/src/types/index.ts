@@ -35,6 +35,24 @@ export type GroupedStores = {
   };
 };
 
+export type Product = {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  category: string;
+  stores: CityStore[];
+  additionalImages: [];
+  inStock: boolean;
+  sku: string;
+};
+
+export type Category = {
+  id: string;
+  name: string;
+  description: string;
+};
+
 export type AdminResponseSuccess<T> = {
   docs: T[];
   hasNextPage: boolean;

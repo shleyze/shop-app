@@ -12,7 +12,8 @@ export interface Config {
   };
   collections: {
     orders: Order;
-    goods: Good;
+    products: Product;
+    categories: Category;
     media: Media;
     stores: Store;
     cities: City;
@@ -54,39 +55,25 @@ export interface UserAuthOperations {
  */
 export interface Order {
   id: string;
-  price: number;
-  purchase?: (string | Good)[] | null;
+  orderNumber: string;
+  store: string | Store;
+  items: {
+    product: string | Product;
+    quantity: number;
+    price: number;
+    id?: string | null;
+  }[];
+  total: number;
+  status: 'new' | 'confirmed' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
+  shippingAddress: {
+    street: string;
+    city: string;
+  };
+  paymentMethod: 'self_delivery' | 'cash_on_delivery';
+  paymentStatus: 'pending' | 'paid' | 'failed' | 'refunded';
+  notes?: string | null;
   updatedAt: string;
   createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "goods".
- */
-export interface Good {
-  id: string;
-  title: string;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "media".
- */
-export interface Media {
-  id: string;
-  alt: string;
-  updatedAt: string;
-  createdAt: string;
-  url?: string | null;
-  thumbnailURL?: string | null;
-  filename?: string | null;
-  mimeType?: string | null;
-  filesize?: number | null;
-  width?: number | null;
-  height?: number | null;
-  focalX?: number | null;
-  focalY?: number | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -131,6 +118,59 @@ export interface City {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "products".
+ */
+export interface Product {
+  id: string;
+  name: string;
+  description?: string | null;
+  price: number;
+  category?: (string | null) | Category;
+  stores?: (string | Store)[] | null;
+  mainImage?: (string | null) | Media;
+  additionalImages?:
+    | {
+        image?: (string | null) | Media;
+        id?: string | null;
+      }[]
+    | null;
+  inStock?: boolean | null;
+  sku?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "categories".
+ */
+export interface Category {
+  id: string;
+  name: string;
+  description: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "media".
+ */
+export interface Media {
+  id: string;
+  alt: string;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
 export interface User {
@@ -158,8 +198,12 @@ export interface PayloadLockedDocument {
         value: string | Order;
       } | null)
     | ({
-        relationTo: 'goods';
-        value: string | Good;
+        relationTo: 'products';
+        value: string | Product;
+      } | null)
+    | ({
+        relationTo: 'categories';
+        value: string | Category;
       } | null)
     | ({
         relationTo: 'media';

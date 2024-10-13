@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { SafeAreaView, Alert } from "react-native";
 import {
   Button,
@@ -13,16 +13,17 @@ import {
 } from "@ui-kitten/components";
 import { View, AnimatePresence } from "moti";
 
-import type { Coordinates } from "@/types";
+import type { Coordinates, CityStore } from "@/types";
 import { findNearestLocations } from "@/utils/findNearestLocationAndShop";
-import { useAvailableCitiesAndStores } from "@/hooks/useAvailableCitiesAndStores";
 
 import { useUserStore } from "@/hooks/useUser";
+import { useStoresQuery } from "@/hooks/useStores";
 
 import { DEFAULT_LOCATION } from "./constants";
 import { CustomStoreSelect } from "./CustomStoreSelect";
 import { MapStoreSelect } from "./MapStoreSelect";
 import type { UserLocationProps } from "./types";
+import { groupStoresByCity } from "@/utils/groupStoresByCity";
 
 export function UserLocation(props: UserLocationProps) {
   const [state, setState] = useState<{
@@ -35,11 +36,14 @@ export function UserLocation(props: UserLocationProps) {
     selectedTabIndex: 0,
   });
 
-  const { cities, stores } = useAvailableCitiesAndStores();
+  const storesQuery = useStoresQuery();
+  const groups = useMemo(
+    () => Object.values(groupStoresByCity(storesQuery.data?.docs)),
+    [storesQuery.data?.docs],
+  );
 
   const selectedLocation = useUserStore((state) => state.selectedLocation);
   const nearestStore = useUserStore((state) => state.nearestStore);
-  const nearestCity = useUserStore((state) => state.nearestCity);
   const isInDeliveryZone = useUserStore((state) => state.isInDeliveryZone);
   const handleSetStoreId = useUserStore((state) => state.actions.setStoreId);
   const handleSetNearestData = useUserStore(
@@ -50,12 +54,19 @@ export function UserLocation(props: UserLocationProps) {
   );
 
   const handleStoreSelect = useCallback(
-    (storeId: number) => {
+    (storeId: CityStore["id"]) => {
       handleSetStoreId(storeId);
+      const selectedStore = storesQuery.data?.docs.find(
+        ({ id }) => storeId === id,
+      );
+
+      if (selectedStore) {
+        handleSetSelectedLocation(selectedStore.coordinates);
+      }
 
       props.onStoreSelect?.();
     },
-    [handleSetStoreId, props.onStoreSelect],
+    [handleSetStoreId, props.onStoreSelect, storesQuery.data],
   );
 
   const handleTabChange: Exclude<TabViewProps["onSelect"], undefined> =
@@ -98,8 +109,8 @@ export function UserLocation(props: UserLocationProps) {
       try {
         const nearestLocations = await findNearestLocations(
           location,
-          cities,
-          stores,
+          groups?.map(({ city }) => city),
+          storesQuery.data?.docs,
         );
 
         handleSetNearestData({
@@ -122,13 +133,19 @@ export function UserLocation(props: UserLocationProps) {
       }
     },
     [
-      cities,
-      stores,
+      groups,
+      storesQuery.data?.docs,
       handleMapError,
       handleSetSelectedLocation,
       handleSetNearestData,
     ],
   );
+
+  useEffect(() => {
+    if (selectedLocation && storesQuery.data?.docs) {
+      handleLocationUpdate(selectedLocation);
+    }
+  }, [selectedLocation, storesQuery.data?.docs]);
 
   return (
     <>
@@ -156,7 +173,7 @@ export function UserLocation(props: UserLocationProps) {
                           selectedLocation?.longitude ||
                           DEFAULT_LOCATION.longitude,
                       }}
-                      stores={nearestCity?.stores}
+                      stores={storesQuery.data?.docs}
                       onLocationSelect={handleLocationUpdate}
                       onError={handleMapError}
                     >
@@ -177,7 +194,7 @@ export function UserLocation(props: UserLocationProps) {
                               overflow: "hidden",
                             }}
                           >
-                            {selectedLocation ? (
+                            {selectedLocation && !state.isLoading ? (
                               <View style={{ gap: 8 }}>
                                 <Text category="s1">Ближайший магазин:</Text>
 

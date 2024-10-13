@@ -14,9 +14,9 @@ import {
 
 import { LoginForm } from "@/components/LoginForm";
 import { useAuth } from "@/hooks/useAuth";
-import { useAvailableCitiesAndStores } from "@/hooks/useAvailableCitiesAndStores";
 import { useUserStore } from "@/hooks/useUser";
 import { openUserLocationModal } from "@/features/UserLocationModal";
+import { useStoresQuery } from "@/hooks/useStores";
 
 const UserIcon = (props: IconProps): IconElement => (
   <Icon {...props} name="person-outline" />
@@ -34,12 +34,13 @@ export function Header() {
     setModalVisible(false);
   };
 
-  const { stores } = useAvailableCitiesAndStores();
+  const storesQuery = useStoresQuery();
+
   const storeId = useUserStore((state) => state.storeId);
 
   const selectedStore = useMemo(() => {
-    return stores.find((store) => store.id === storeId);
-  }, [stores, storeId]);
+    return storesQuery.data?.docs.find((store) => store.id === storeId);
+  }, [storesQuery.data, storeId]);
 
   const renderRightActions = (): ReactElement => (
     <>

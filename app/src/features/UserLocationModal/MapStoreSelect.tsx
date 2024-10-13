@@ -1,7 +1,6 @@
 import { memo, useEffect, useMemo, Fragment } from "react";
 import { View } from "react-native";
 import MapView, { Marker, Polygon } from "react-native-maps";
-import { Text } from "@ui-kitten/components";
 
 import { getCurrentLocation } from "@/utils/currentPosition";
 import { calculateMapRegionForLocation } from "@/utils/mapDeltas";

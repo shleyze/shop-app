@@ -1,14 +1,19 @@
 import { ScrollView, View } from "react-native";
-import { useCallback, memo } from "react";
+import { useCallback, memo, useMemo } from "react";
 import { Card, Text, List, ListItem } from "@ui-kitten/components";
 
 import type { CityStore } from "@/types";
-import { useAvailableCitiesAndStores } from "@/hooks/useAvailableCitiesAndStores";
+import { useStoresQuery } from "@/hooks/useStores";
+import { groupStoresByCity } from "@/utils/groupStoresByCity";
 
 import type { CustomStoreSelectProps } from "./types";
 
 export const CustomStoreSelect = memo((props: CustomStoreSelectProps) => {
-  const { cities } = useAvailableCitiesAndStores();
+  const storesQuery = useStoresQuery();
+  const groups = useMemo(
+    () => Object.values(groupStoresByCity(storesQuery.data?.docs)),
+    [storesQuery.data?.docs],
+  );
 
   const handleSelectStore = useCallback(
     (id: CityStore["id"]) => {
@@ -20,13 +25,13 @@ export const CustomStoreSelect = memo((props: CustomStoreSelectProps) => {
   return (
     <View style={{ gap: 16, flex: 1 }}>
       <ScrollView>
-        {cities?.map(({ id, name, stores }) => {
+        {groups.map(({ city, stores }) => {
           return (
             <Card
-              key={id}
+              key={city.id}
               header={(props) => (
                 <View {...props}>
-                  <Text category="h6">{name}</Text>
+                  <Text category="h6">{city.name}</Text>
                 </View>
               )}
               appearance="filled"

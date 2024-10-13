@@ -102,7 +102,15 @@ export interface Store {
   };
   city: string | City;
   deliveryZone: {
-    polygon: string;
+    polygon:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
   };
   updatedAt: string;
   createdAt: string;

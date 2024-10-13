@@ -12,18 +12,38 @@ export type Location = {
 export type City = {
   name: string;
   coordinates: Coordinates;
-  stores: CityStore[];
-  id: number;
+  id: string;
 };
 
 export type CityStore = {
+  id: string;
   name: string;
   address: string;
   coordinates: Coordinates;
-  deliveryZone: StoreDeliveryZone;
-  id: number;
+  city: City;
+  deliveryZone: {
+    polygon: Coordinates[];
+  };
+  createdAt: "2024-10-13T11:52:55.206Z";
+  updatedAt: "2024-10-13T11:52:55.206Z";
 };
 
-export type StoreDeliveryZone = {
-  polygon: Coordinates[];
+export type GroupedStores = {
+  [cityId: string]: {
+    city: City;
+    stores: CityStore[];
+  };
+};
+
+export type AdminResponseSuccess<T> = {
+  docs: T[];
+  hasNextPage: boolean;
+  hasPrevPage: boolean;
+  limit: number;
+  nextPage: number | null;
+  page: number;
+  pagingCounter: number;
+  prevPage: number | null;
+  totalDocs: number;
+  totalPages: number;
 };

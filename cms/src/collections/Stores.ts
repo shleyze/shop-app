@@ -54,7 +54,7 @@ export const Stores: CollectionConfig = {
       fields: [
         {
           name: 'polygon',
-          type: 'textarea',
+          type: 'json',
           required: true,
         },
       ],

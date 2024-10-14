@@ -41,7 +41,7 @@ export default buildConfig({
       collections: {
         media: {
           disableLocalStorage: true,
-          // prefix: 'https://ggtwpgjpqnnys215.public.blob.vercel-storage.com',
+          prefix: `https://${process.env.VERCEL_URL}`,
         },
       },
     }),

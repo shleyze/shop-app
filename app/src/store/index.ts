@@ -18,11 +18,6 @@ import deepmerge from "deepmerge";
  * @param {StateCreator<T, [["zustand/devtools", never]], []>} initializer Функция инициализации состояния store.
  * @returns {StateCreator<T>} Созданный Zustand store.
  *
- * @example
- * const useCounterStore = createStore('counter', (set) => ({
- *   count: 0,
- *   increment: () => set((state) => ({ count: state.count + 1 })),
- * }));
  */
 export function createStore<T extends unknown>(
   name: string,
@@ -41,11 +36,6 @@ export function createStore<T extends unknown>(
  * @param {Omit<PersistOptions<T, P>, "name" | "storage" | "merge">} persistOptions Дополнительные опции для персистентного хранилища.
  * @returns {StateCreator<T>} Созданный персистентный Zustand store.
  *
- * @example
- * const useSettingsStore = createPersistStore('settings', (set) => ({
- *   theme: 'light',
- *   setTheme: (theme) => set({ theme }),
- * }));
  */
 export function createPersistStore<T extends unknown, P = T>(
   name: string,

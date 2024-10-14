@@ -1,5 +1,6 @@
 import { TouchableOpacity, View } from "react-native";
-import { Icon, Text, Divider, useTheme } from "@ui-kitten/components";
+import { Icon, Text, useTheme } from "@ui-kitten/components";
+import { useRouter, usePathname } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { View as AnimatedView, AnimatePresence } from "moti";
 
@@ -9,14 +10,18 @@ import { formatPrice } from "@/utils/formatPrice";
 export function CartInfo() {
   const insets = useSafeAreaInsets();
   const theme = useTheme();
+  const router = useRouter();
+  const pathname = usePathname();
 
   const isCartEmpty = useCart((state) => state.isCartEmpty);
   const totalCount = useCart((state) => state.totalCount);
   const totalPrice = useCart((state) => state.totalPrice);
 
+  const isHidden = pathname.includes("order");
+
   return (
     <AnimatePresence>
-      {isCartEmpty ? null : (
+      {isCartEmpty || isHidden ? null : (
         <AnimatedView
           from={{
             opacity: 0,
@@ -52,6 +57,9 @@ export function CartInfo() {
               flexDirection: "row",
               alignItems: "center",
               gap: 8,
+            }}
+            onPress={() => {
+              router.push("/order");
             }}
           >
             <Text category="s2" style={{ color: theme["color-basic-100"] }}>

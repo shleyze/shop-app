@@ -35,6 +35,15 @@ export type GroupedStores = {
   };
 };
 
+export type GroupedProduct = {
+  products: {
+    [id: string]: {
+      product: Product;
+      count: number;
+    };
+  };
+};
+
 export type Product = {
   id: string;
   name: string;

@@ -6,6 +6,7 @@ import { EvaIconsPack } from "@ui-kitten/eva-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { UserLocationModal } from "@/features/UserLocationModal";
+import { OrderModal } from "@/features/OrderModal";
 import { CartInfo } from "@/features/CartInfo";
 import { Header } from "@/components/Header";
 import { useUserStore } from "@/hooks/useUser";
@@ -22,6 +23,7 @@ export default function Layout() {
         <QueryClientProvider client={queryClient}>
           <SafeAreaView style={{ flex: 1 }}>
             <UserLocationModal />
+            <OrderModal />
 
             {storeId && (
               <>

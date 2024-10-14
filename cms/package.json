@@ -15,10 +15,13 @@
     "start": "cross-env NODE_OPTIONS=--no-deprecation next start"
   },
   "dependencies": {
+    "@google-cloud/storage": "^7.13.0",
     "@payloadcms/db-mongodb": "beta",
     "@payloadcms/next": "beta",
-    "@payloadcms/plugin-cloud": "beta",
+    "@payloadcms/plugin-cloud-storage": "3.0.0-beta.110",
     "@payloadcms/richtext-lexical": "beta",
+    "@payloadcms/storage-gcs": "3.0.0-beta.110",
+    "@payloadcms/storage-vercel-blob": "3.0.0-beta.110",
     "cross-env": "7.0.3",
     "graphql": "16.9.0",
     "next": "15.0.0-canary.160",

@@ -26,33 +26,28 @@ export function UserLocationModal() {
   }, [handleModalOpen, storeId]);
 
   return (
-    <>
-      <Modal
-        visible={isModalOpen}
-        backdropStyle={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
-        animationType="fade"
-        style={{ width: "100%", height: "100%" }}
-        collapsable={false}
-      >
-        <UserLocation onStoreSelect={handleModalClose} />
-        {canBeClosed && (
-          <TouchableOpacity
-            style={{
-              width: 24,
-              height: 24,
-              position: "absolute",
-              top: insets.top,
-              right: 20,
-            }}
-            onPress={handleModalClose}
-          >
-            <Icon
-              name="close-square-outline"
-              fill={theme["color-primary-600"]}
-            />
-          </TouchableOpacity>
-        )}
-      </Modal>
-    </>
+    <Modal
+      visible={isModalOpen}
+      backdropStyle={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
+      animationType="fade"
+      style={{ width: "100%", height: "100%" }}
+      collapsable={false}
+    >
+      <UserLocation onStoreSelect={handleModalClose} />
+      {canBeClosed && (
+        <TouchableOpacity
+          style={{
+            width: 24,
+            height: 24,
+            position: "absolute",
+            top: insets.top,
+            right: 20,
+          }}
+          onPress={handleModalClose}
+        >
+          <Icon name="close-square-outline" fill={theme["color-primary-600"]} />
+        </TouchableOpacity>
+      )}
+    </Modal>
   );
 }

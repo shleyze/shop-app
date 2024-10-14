@@ -51,7 +51,7 @@ export function Product({ product }: ProductProps) {
             bottom: 0,
             position: "absolute",
           }}
-          source={require("@/assets/product-placeholder.jpg")}
+          source={require("@/assets/product-placeholder.png")}
         />
 
         <View
@@ -65,6 +65,9 @@ export function Product({ product }: ProductProps) {
             flexDirection: "row",
             alignItems: "center",
             gap: 8,
+            borderStyle: "solid",
+            borderColor: theme["color-basic-400"],
+            borderWidth: 1,
           }}
         >
           <Text>{formatPrice(product.price)}</Text>

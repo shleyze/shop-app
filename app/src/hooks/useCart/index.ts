@@ -55,6 +55,9 @@ export const useCart = createPersistStore<Store, Pick<Store, "products">>(
     partialize(state) {
       return {
         products: state.products,
+        isCartEmpty: state.isCartEmpty,
+        totalCount: state.totalCount,
+        totalPrice: state.totalPrice,
       };
     },
   },

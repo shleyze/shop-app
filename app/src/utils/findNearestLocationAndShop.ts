@@ -6,7 +6,7 @@ import type { City, CityStore, Coordinates, Location } from "@/types";
  * @module location-utils
  */
 
-// Коэффициент извилистости дорог (примерное значение, может варьироваться в зависимости от региона)
+// Коэффициент извилистости дорог (примерное значение)
 const ROAD_CURVATURE_FACTOR = 1.3;
 // Радиус Земли в метрах
 const RADIUS_OF_EARTH = 6371000;

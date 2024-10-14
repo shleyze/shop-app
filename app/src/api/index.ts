@@ -1,47 +1,52 @@
 import axios from "axios";
 import qs from "query-string";
 
+/**
+ * Основной Axios клиент для взаимодействия с админским API.
+ *
+ * @constant
+ * @type {import('axios').AxiosInstance}
+ *
+ * @property {string} baseURL - Базовый URL админского API, взятый из переменной окружения.
+ * @property {Object} headers - Заголовки запроса, устанавливающие тип контента как JSON.
+ * @property {boolean} withCredentials - Флаг, указывающий на необходимость отправки куки с запросами.
+ *
+ * @example
+ * const response = await client.get('/users');
+ */
 export const client = axios.create({
   baseURL: process.env.EXPO_PUBLIC_ADMIN_API_URL,
   headers: {
     "Content-Type": "application/json",
   },
   withCredentials: true,
-  // paramsSerializer: (params) =>
-  //   qs.stringify(params, { arrayFormat: "bracket", encode: false }),
 });
 
+/**
+ * Интерцептор ответов для основного клиента.
+ * Автоматически извлекает данные из ответа или обрабатывает ошибки.
+ */
 client.interceptors.response.use(
   (response) => response.data,
   async (error) => {
-    const originalRequest = error.config;
-
-    // if ([401, 403].includes(error.response.status) && !originalRequest._retry) {
-    //   console.log("error", error);
-    //   // originalRequest._retry = true;
-    //   // const accessToken = document.cookie("accessToken");
-    //   //   if (accessToken) {
-    //   //     try {
-    //   //       const response = await axios.post(
-    //   //         `http://localhost:3000/api/users/refresh-token`,
-    //   //         {},
-    //   //         { headers: { Authorization: `JWT ${accessToken}` } },
-    //   //       );
-    //   //       //     // don't use axious instance that already configured for refresh token api call
-    //   //       const newAccessToken = response.data.token;
-    //   //       localStorage.setItem("accessToken", newAccessToken); //set new access token
-    //   //       originalRequest.headers.Authorization = `JWT ${newAccessToken}`;
-    //   //       return axios(originalRequest); //recall Api with new token
-    //   //     } catch (error) {
-    //   //       //     // Handle token refresh failure
-    //   //       //     // mostly logout the user and re-authenticate by login again
-    //   //     }
-    //   //   }
-    // }
     return Promise.reject(error);
   },
 );
 
+/**
+ * Axios клиент для взаимодействия с API OpenRouteService.
+ *
+ * @constant
+ * @type {import('axios').AxiosInstance}
+ *
+ * @property {string} baseURL - Базовый URL API OpenRouteService.
+ * @property {Object} params - Параметры запроса по умолчанию, включая API ключ и язык.
+ * @property {Object} headers - Заголовки запроса, включающие авторизационный токен.
+ * @property {Function} paramsSerializer - Функция для сериализации параметров запроса.
+ *
+ * @example
+ * const route = await openRouteClient.get('/v2/directions/driving-car', { params: { start: '8.681495,49.41461', end: '8.687872,49.420318' } });
+ */
 export const openRouteClient = axios.create({
   baseURL: "https://api.openrouteservice.org",
   params: {

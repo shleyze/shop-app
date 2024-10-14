@@ -37,10 +37,11 @@ export default buildConfig({
   sharp,
   plugins: [
     vercelBlobStorage({
-      token: (process.env.BLOB_READ_WRITE_TOKEN || '') as string,
+      token: (process.env.BLOB_READ_WRITE_TOKEN_READ_WRITE_TOKEN || '') as string,
       collections: {
         media: {
           disableLocalStorage: true,
+          // prefix: 'https://ggtwpgjpqnnys215.public.blob.vercel-storage.com',
         },
       },
     }),

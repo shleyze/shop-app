@@ -7,7 +7,7 @@ import type {
 
 export type GetProductsApiRequest = {
   storeId: CityStore["id"];
-  categoryId: Category["id"];
+  categoryId?: Category["id"];
   limit?: number;
 };
 export type GetProductsApiResponseSuccess = AdminResponseSuccess<Product>;

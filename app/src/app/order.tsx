@@ -6,6 +6,7 @@ import { useCart } from "@/hooks/useCart";
 import { groupAndCountProducts } from "@/utils/groupAndCountProducts";
 import { formatPrice } from "@/utils/formatPrice";
 import { useOrderModal } from "@/features/OrderModal";
+import { Footer } from "@/components/Footer";
 
 export default function Page() {
   const theme = useTheme();
@@ -30,7 +31,7 @@ export default function Page() {
   return (
     <>
       <ScrollView>
-        <View style={{ paddingHorizontal: 16, paddingTop: 8, gap: 16 }}>
+        <View style={{ paddingHorizontal: 16, paddingTop: 8, gap: 20 }}>
           {groupedProducts?.map(({ product, count }) => {
             return (
               <View
@@ -119,6 +120,7 @@ export default function Page() {
       >
         <Button onPress={handleOrderModalOpen}>Оформить заказ</Button>
       </View>
+      <Footer hasOffset={false} />
     </>
   );
 }

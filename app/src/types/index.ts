@@ -51,9 +51,22 @@ export type Product = {
   price: number;
   category: string;
   stores: CityStore[];
-  additionalImages: [];
+  mainImage?: Image;
+  additionalImages?: Image[];
   inStock: boolean;
   sku: string;
+};
+
+export type Image = {
+  id: string;
+  alt: string;
+  filename: string;
+  mimeType: string;
+  width: number;
+  height: number;
+  prefix: string;
+  url: string;
+  thumbnailURL?: string;
 };
 
 export type Category = {

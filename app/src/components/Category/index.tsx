@@ -9,12 +9,12 @@ import { useProductsQuery } from "@/hooks/useProducts";
 import type { CategoryProps } from "./types";
 import { PRODUCTS_LIMIT } from "./constants";
 
-export function Category({ id, title }: CategoryProps) {
+export function Category({ id, title, limit = PRODUCTS_LIMIT }: CategoryProps) {
   const storeId = useUserStore((state) => state.storeId);
   const productsQuery = useProductsQuery({
     storeId: storeId!,
     categoryId: id,
-    limit: PRODUCTS_LIMIT,
+    limit,
   });
 
   return (
@@ -33,7 +33,7 @@ export function Category({ id, title }: CategoryProps) {
           <Link
             href={{
               pathname: "/[category]",
-              params: { category: id },
+              params: { category: id || "recommendations" },
             }}
             asChild
           >

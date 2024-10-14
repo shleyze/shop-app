@@ -1,4 +1,5 @@
 export type CategoryProps = {
-  id: string;
+  id?: string;
   title?: string;
+  limit?: number;
 };

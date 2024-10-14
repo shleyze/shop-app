@@ -1,21 +1,23 @@
 import { ScrollView, View } from "react-native";
 import { Text } from "@ui-kitten/components";
 import { useLocalSearchParams } from "expo-router";
+import { useMemo } from "react";
 
 import { Products } from "@/components/Products";
 import { useProductsQuery } from "@/hooks/useProducts";
 import { useUserStore } from "@/hooks/useUser";
 import { useCategoriesQuery } from "@/hooks/useCategories";
-import { useMemo } from "react";
+import { Footer } from "@/components/Footer";
 
 export default function CategoryPage() {
   const { category } = useLocalSearchParams<{ category: string }>();
   const categoriesQuery = useCategoriesQuery();
   const storeId = useUserStore((state) => state.storeId);
+  const isRecommendations = category === "recommendations";
 
   const productsQuery = useProductsQuery({
     storeId: storeId!,
-    categoryId: category!,
+    categoryId: isRecommendations ? undefined : category,
     limit: 100,
   });
 
@@ -33,13 +35,18 @@ export default function CategoryPage() {
         }}
       >
         <View style={{ gap: 8 }}>
-          <Text category="h2">{currentCategory?.name}</Text>
+          <Text category="h2">
+            {isRecommendations ? "Рекомендации" : currentCategory?.name}
+          </Text>
           <Text category="s1" appearance="hint">
-            {currentCategory?.description}
+            {isRecommendations
+              ? "Мы собрали для вас самые популярные блюда"
+              : currentCategory?.description}
           </Text>
         </View>
         <Products products={productsQuery.data?.docs} />
       </View>
+      <Footer />
     </ScrollView>
   );
 }

@@ -10,6 +10,6 @@ export function useProductsQuery({
   return useQuery({
     queryKey: ["products", storeId, categoryId, limit],
     queryFn: () => getProducts({ storeId, categoryId, limit }),
-    enabled: !!storeId && !!categoryId,
+    enabled: !!storeId,
   });
 }

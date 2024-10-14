@@ -10,6 +10,7 @@ import { OrderModal } from "@/features/OrderModal";
 import { CartInfo } from "@/features/CartInfo";
 import { Header } from "@/components/Header";
 import { useUserStore } from "@/hooks/useUser";
+import { Footer } from "@/components/Footer";
 
 const queryClient = new QueryClient();
 

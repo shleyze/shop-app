@@ -1,14 +1,16 @@
 import { Image, TouchableOpacity, View } from "react-native";
 import { Icon, Text, useTheme } from "@ui-kitten/components";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 
 import { useCart } from "@/hooks/useCart";
 import { formatPrice } from "@/utils/formatPrice";
+import { Loader } from "@/components/Loader";
 
 import { ProductProps } from "./types";
 
 export function Product({ product }: ProductProps) {
   const theme = useTheme();
+  const [loading, setLoading] = useState(false);
 
   const cartProducts = useCart((state) => state.products);
   const handleAddToCart = useCart((state) => state.actions.addProductToCart);
@@ -23,6 +25,17 @@ export function Product({ product }: ProductProps) {
   const countInCart = useMemo(() => {
     return productsById.filter((id) => product.id === id).length;
   }, [productsById, product.id]);
+
+  const imageSrc = useMemo(() => {
+    if (product.mainImage) {
+      try {
+        return new URL(
+          product.mainImage?.url,
+          product.mainImage?.prefix,
+        ).toString();
+      } catch {}
+    }
+  }, [product.mainImage]);
 
   return (
     <View
@@ -51,8 +64,19 @@ export function Product({ product }: ProductProps) {
             bottom: 0,
             position: "absolute",
           }}
-          source={require("@/assets/product-placeholder.png")}
+          source={
+            imageSrc
+              ? {
+                  uri: imageSrc,
+                  width: product.mainImage?.width,
+                  height: product.mainImage?.height,
+                }
+              : require("@/assets/product-placeholder.png")
+          }
+          onLoadStart={() => setLoading(true)}
+          onLoad={() => setLoading(false)}
         />
+        <Loader loading={loading} hasBackdropColor={false} />
 
         <View
           style={{

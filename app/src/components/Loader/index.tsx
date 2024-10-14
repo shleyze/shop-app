@@ -3,7 +3,10 @@ import { Spinner } from "@ui-kitten/components";
 
 import { LoaderProps } from "./types";
 
-export function Loader({ loading = false }: LoaderProps) {
+export function Loader({
+  loading = false,
+  hasBackdropColor = true,
+}: LoaderProps) {
   return (
     <AnimatePresence>
       {loading && (
@@ -25,7 +28,9 @@ export function Loader({ loading = false }: LoaderProps) {
             bottom: 0,
             left: 0,
             right: 0,
-            backgroundColor: "rgba(0, 0, 0, 0.2)",
+            backgroundColor: hasBackdropColor
+              ? "rgba(0, 0, 0, 0.2)"
+              : "transparent",
             zIndex: 1,
             alignItems: "center",
             justifyContent: "center",

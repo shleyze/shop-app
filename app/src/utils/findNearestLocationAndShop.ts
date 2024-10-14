@@ -1,15 +1,31 @@
 import { getMatrixDrivingCar } from "@/api/matrixDrivingCar";
 import type { City, CityStore, Coordinates, Location } from "@/types";
 
+/**
+ * Модуль для работы с геолокацией, поиска ближайших локаций и расчета расстояний.
+ * @module location-utils
+ */
+
 // Коэффициент извилистости дорог (примерное значение, может варьироваться в зависимости от региона)
 const ROAD_CURVATURE_FACTOR = 1.3;
 // Радиус Земли в метрах
 const RADIUS_OF_EARTH = 6371000;
 
+/**
+ * Преобразует градусы в радианы.
+ * @param {number} deg - Угол в градусах.
+ * @returns {number} Угол в радианах.
+ */
 function deg2rad(deg: number): number {
   return deg * (Math.PI / 180);
 }
 
+/**
+ * Рассчитывает расстояние между двумя точками на сфере (Земле) с учетом коэффициента извилистости дорог.
+ * @param {Coordinates} coord1 - Координаты первой точки.
+ * @param {Coordinates} coord2 - Координаты второй точки.
+ * @returns {number} Расстояние в метрах.
+ */
 function calculateHaversineDistance(
   coord1: Coordinates,
   coord2: Coordinates,
@@ -28,6 +44,13 @@ function calculateHaversineDistance(
   return RADIUS_OF_EARTH * c * ROAD_CURVATURE_FACTOR;
 }
 
+/**
+ * Находит N ближайших локаций к заданной точке.
+ * @param {Coordinates} userLocation - Координаты пользователя.
+ * @param {Location[]} locations - Массив локаций для поиска.
+ * @param {number} n - Количество ближайших локаций для возврата.
+ * @returns {Location[]} Массив N ближайших локаций.
+ */
 function findTopNClosest(
   userLocation: Coordinates,
   locations: Location[] = [],
@@ -45,6 +68,12 @@ function findTopNClosest(
     .slice(0, n);
 }
 
+/**
+ * Рассчитывает матрицу расстояний между точкой отсчета и набором точек назначения.
+ * @param {Coordinates} origin - Координаты точки отсчета.
+ * @param {Location[]} destinations - Массив точек назначения.
+ * @returns {Promise<number[]>} Массив расстояний в метрах.
+ */
 async function calculateMatrixDistances(
   origin: Coordinates,
   destinations: Location[],
@@ -74,6 +103,12 @@ async function calculateMatrixDistances(
   }
 }
 
+/**
+ * Проверяет, находится ли точка внутри многоугольника.
+ * @param {Coordinates} point - Координаты проверяемой точки.
+ * @param {Coordinates[]} polygon - Массив координат, определяющих многоугольник.
+ * @returns {boolean} true, если точка находится внутри многоугольника, иначе false.
+ */
 function isPointInPolygon(point: Coordinates, polygon: Coordinates[]): boolean {
   let inside = false;
   for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
@@ -90,6 +125,11 @@ function isPointInPolygon(point: Coordinates, polygon: Coordinates[]): boolean {
   return inside;
 }
 
+/**
+ * Форматирует расстояние из метров в удобочитаемый формат.
+ * @param {number} meters - Расстояние в метрах.
+ * @returns {string} Отформатированное расстояние (в км или м).
+ */
 export function formatDistance(meters: number): string {
   if (meters >= 1000) {
     return `${(meters / 1000).toFixed(2)} км`;
@@ -97,6 +137,13 @@ export function formatDistance(meters: number): string {
   return `${meters.toFixed(0)} м`;
 }
 
+/**
+ * Находит ближайшие локации (город и магазин) относительно заданных координат пользователя.
+ * @param {Coordinates} userLocation - Координаты пользователя.
+ * @param {City[]} cities - Массив городов.
+ * @param {CityStore[]} stores - Массив магазинов.
+ * @returns {Promise<Object>} Объект с информацией о ближайших локациях.
+ */
 export async function findNearestLocations(
   userLocation: Coordinates,
   cities: City[] = [],

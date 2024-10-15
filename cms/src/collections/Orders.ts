@@ -64,6 +64,11 @@ export const Orders: CollectionConfig = {
       },
     },
     {
+      name: 'email',
+      type: 'text',
+      required: true,
+    },
+    {
       name: 'status',
       type: 'select',
       options: [
@@ -209,7 +214,7 @@ export const Orders: CollectionConfig = {
 
           await payload.email.sendEmail({
             from: 'sender@server.com',
-            to: 'iam@wsh.dev',
+            to: originalOrder.email,
             subject: `Заказ #${originalOrder?.orderNumber} ${label}`,
             html: getEmail(originalOrder),
           })
@@ -249,7 +254,7 @@ export const Orders: CollectionConfig = {
 
           await payload.email.sendEmail({
             from: 'sender@server.com',
-            to: 'iam@wsh.dev',
+            to: originalOrder.email,
             subject: `Создан заказ #${originalOrder?.orderNumber}`,
             html: getEmail(originalOrder),
           })

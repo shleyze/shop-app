@@ -4,7 +4,8 @@ import path from 'path'
 import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
 import sharp from 'sharp'
-
+import { nodemailerAdapter } from '@payloadcms/email-nodemailer'
+import nodemailer from 'nodemailer'
 import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
 
 import { Users } from '@/collections/Users'
@@ -46,4 +47,18 @@ export default buildConfig({
       },
     }),
   ],
+  email: nodemailerAdapter({
+    defaultFromAddress: 'shop@app.ru',
+    defaultFromName: 'ShopApp',
+    transport: await nodemailer.createTransport({
+      service: 'Gmail',
+      port: 465,
+      secure: true,
+      host: process.env.SMTP_HOST,
+      auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
+      },
+    }),
+  }),
 })

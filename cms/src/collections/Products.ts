@@ -6,6 +6,10 @@ export const Products: CollectionConfig = {
     useAsTitle: 'name',
     defaultColumns: ['name', 'category', 'price', 'mainImage'],
   },
+  labels: {
+    singular: 'Продукт',
+    plural: 'Продукты',
+  },
   access: {
     read: () => true,
   },

@@ -5,6 +5,10 @@ export const Categories: CollectionConfig = {
   admin: {
     useAsTitle: 'name',
   },
+  labels: {
+    singular: 'Категория',
+    plural: 'Категории',
+  },
   access: {
     read: () => true,
   },

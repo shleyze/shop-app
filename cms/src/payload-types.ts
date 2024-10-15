@@ -60,17 +60,13 @@ export interface Order {
   items: {
     product: string | Product;
     quantity: number;
-    price: number;
     id?: string | null;
   }[];
-  total: number;
-  status: 'new' | 'confirmed' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
-  shippingAddress: {
-    street: string;
-    city: string;
-  };
+  total?: number | null;
+  status: 'new' | 'shipped' | 'delivered' | 'cancelled';
   paymentMethod: 'self_delivery' | 'cash_on_delivery';
   paymentStatus: 'pending' | 'paid' | 'failed' | 'refunded';
+  description?: string | null;
   notes?: string | null;
   updatedAt: string;
   createdAt: string;

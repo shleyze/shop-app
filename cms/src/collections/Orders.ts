@@ -18,6 +18,7 @@ export const Orders: CollectionConfig = {
   },
   access: {
     read: () => true,
+    create: () => true,
   },
   fields: [
     {
@@ -84,14 +85,16 @@ export const Orders: CollectionConfig = {
         update: ({ req: { user } }) => Boolean(user),
       },
     },
-    // {
-    //   name: 'shippingAddress',
-    //   type: 'group',
-    //   fields: [
-    //     { name: 'street', type: 'text', required: true },
-    //     { name: 'city', type: 'text', required: true },
-    //   ],
-    // },
+    {
+      name: 'shippingAddress',
+      type: 'text',
+      required: true,
+    },
+    {
+      name: 'phoneNumber',
+      type: 'text',
+      required: true,
+    },
     {
       name: 'paymentMethod',
       type: 'select',
@@ -232,13 +235,14 @@ export const Orders: CollectionConfig = {
             collection: 'products',
             where: {
               id: {
-                in: order?.items?.map((item) => item.product).join(','),
+                in: order?.items?.map((item) => item.product?.id || item.product).join(','),
               },
             },
           })
+
           const store = await payload.findByID({
             collection: 'stores',
-            id: typeof order.store === 'string' ? order.store : '',
+            id: typeof order.store === 'string' ? order.store : order.store.id,
           })
 
           const originalOrder = {
@@ -246,7 +250,9 @@ export const Orders: CollectionConfig = {
             items: order.items.map((item) => {
               return {
                 ...item,
-                product: products.docs?.find((doc) => doc.id === item.product),
+                product: products.docs?.find(
+                  (doc) => doc.id === item.product || doc.id === item.product?.id,
+                ),
               }
             }),
             store,

@@ -65,6 +65,8 @@ export interface Order {
   total?: number | null;
   email: string;
   status: 'new' | 'shipped' | 'delivered' | 'cancelled';
+  shippingAddress: string;
+  phoneNumber: string;
   paymentMethod: 'self_delivery' | 'cash_on_delivery';
   paymentStatus: 'pending' | 'paid' | 'failed' | 'refunded';
   description?: string | null;

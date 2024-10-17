@@ -5,7 +5,7 @@ import {
   useEffect,
   useCallback,
 } from "react";
-import { StyleSheet, TouchableOpacity } from "react-native";
+import { TouchableOpacity } from "react-native";
 import {
   Icon,
   type IconElement,
@@ -81,6 +81,7 @@ export function Header() {
   useEffect(() => {
     setCanGoBack(router.canGoBack());
   }, [pathname, router.canGoBack]);
+
   return (
     <Layout style={{ paddingBottom: 8 }}>
       <TopNavigation
@@ -106,11 +107,11 @@ export function Header() {
 
       <Modal
         visible={modalVisible}
-        backdropStyle={styles.backdrop}
+        backdropStyle={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
         onBackdropPress={closeModal}
         animationType="fade"
       >
-        <Card disabled={true} style={styles.card}>
+        <Card disabled={true} style={{ width: 320 }}>
           {email ? (
             <Text>Инфа о пользователе</Text>
           ) : (
@@ -121,12 +122,3 @@ export function Header() {
     </Layout>
   );
 }
-
-const styles = StyleSheet.create({
-  backdrop: {
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-  },
-  card: {
-    width: 320,
-  },
-});

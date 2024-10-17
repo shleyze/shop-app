@@ -1,15 +1,14 @@
 import { useEffect, useMemo } from "react";
 import { TouchableOpacity } from "react-native";
-import { Icon, Modal, useTheme } from "@ui-kitten/components";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { Icon, useTheme } from "@ui-kitten/components";
 
 import { useUserStore } from "@/hooks/useUser";
+import { Modal } from "@/components/Modal";
 
 import { UserLocation } from "./UserLocation";
 import { useStore } from "./store";
 
 export function UserLocationModal() {
-  const insets = useSafeAreaInsets();
   const theme = useTheme();
 
   const isModalOpen = useStore((state) => state.isModalOpen);
@@ -26,13 +25,7 @@ export function UserLocationModal() {
   }, [handleModalOpen, storeId]);
 
   return (
-    <Modal
-      visible={isModalOpen}
-      backdropStyle={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
-      animationType="fade"
-      style={{ width: "100%", height: "100%" }}
-      collapsable={false}
-    >
+    <Modal visible={isModalOpen}>
       <UserLocation onStoreSelect={handleModalClose} />
       {canBeClosed && (
         <TouchableOpacity
@@ -40,7 +33,7 @@ export function UserLocationModal() {
             width: 24,
             height: 24,
             position: "absolute",
-            top: insets.top,
+            top: 0,
             right: 20,
           }}
           onPress={handleModalClose}

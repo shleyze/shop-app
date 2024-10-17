@@ -9,12 +9,15 @@ export default function Page() {
   const categoriesQuery = useCategoriesQuery();
 
   return (
-    <>
-      <Loader loading={categoriesQuery.isLoading} />
-      <ScrollView>
+    <View style={{ flex: 1, flexGrow: 1 }}>
+      <ScrollView
+        contentContainerStyle={{
+          flexGrow: 1,
+        }}
+      >
         <View
           style={{
-            flex: 1,
+            flexGrow: 1,
             paddingHorizontal: 16,
             gap: 32,
           }}
@@ -32,6 +35,7 @@ export default function Page() {
         </View>
         <Footer />
       </ScrollView>
-    </>
+      <Loader loading={categoriesQuery.isLoading} />
+    </View>
   );
 }

@@ -2,7 +2,6 @@ import { TouchableOpacity, View } from "react-native";
 import { Icon, Text, useTheme } from "@ui-kitten/components";
 import { useRouter, usePathname } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { View as AnimatedView, AnimatePresence } from "moti";
 
 import { useCart } from "@/hooks/useCart";
 import { formatPrice } from "@/utils/formatPrice";
@@ -20,25 +19,9 @@ export function CartInfo() {
   const isHidden = pathname.includes("order");
 
   return (
-    <AnimatePresence>
+    <>
       {isCartEmpty || isHidden ? null : (
-        <AnimatedView
-          from={{
-            opacity: 0,
-            scale: 0.9,
-          }}
-          animate={{
-            opacity: 1,
-            scale: 1,
-          }}
-          exit={{
-            opacity: 0,
-            scale: 0.9,
-          }}
-          exitTransition={{
-            type: "timing",
-            duration: 200,
-          }}
+        <View
           style={{
             position: "absolute",
             right: insets.right,
@@ -90,8 +73,8 @@ export function CartInfo() {
               <Text category="c2">{totalCount}</Text>
             </View>
           </TouchableOpacity>
-        </AnimatedView>
+        </View>
       )}
-    </AnimatePresence>
+    </>
   );
 }

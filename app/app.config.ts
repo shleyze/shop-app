@@ -28,16 +28,7 @@ export default {
     permissions: ["LOCATION"],
   },
   locales: {
-    ru: "",
-  },
-  web: {
-    bundler: "metro",
-    favicon: "./assets/favicon.png",
-    build: {
-      babel: {
-        include: ["@ui-kitten/components"],
-      },
-    },
+    ru: "ru",
   },
   plugins: [
     "expo-router",
@@ -56,6 +47,12 @@ export default {
         },
       },
     ],
+    // [
+    //   "expo-dev-launcher",
+    //   {
+    //     launchMode: "most-recent",
+    //   },
+    // ],
   ],
   experiments: {
     typedRoutes: true,

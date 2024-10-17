@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { SafeAreaView, Alert, View } from "react-native";
+import { Alert, View } from "react-native";
 import {
   Button,
   Layout,
@@ -13,17 +13,16 @@ import {
 
 import type { Coordinates, CityStore } from "@/types";
 import { findNearestLocations } from "@/utils/findNearestLocationAndShop";
-
 import { useUserStore } from "@/hooks/useUser";
 import { useStoresQuery } from "@/hooks/useStores";
+import { groupStoresByCity } from "@/utils/groupStoresByCity";
+import { Loader } from "@/components/Loader";
+import { useCart } from "@/hooks/useCart";
 
 import { DEFAULT_LOCATION } from "./constants";
 import { CustomStoreSelect } from "./CustomStoreSelect";
 import { MapStoreSelect } from "./MapStoreSelect";
 import type { UserLocationProps } from "./types";
-import { groupStoresByCity } from "@/utils/groupStoresByCity";
-import { Loader } from "@/components/Loader";
-import { useCart } from "@/hooks/useCart";
 
 export function UserLocation(props: UserLocationProps) {
   const [state, setState] = useState<{
@@ -114,24 +113,26 @@ export function UserLocation(props: UserLocationProps) {
     }, []);
 
   const handleMapError = useCallback(() => {
-    Alert.alert(
-      "Произошла ошибка.",
-      "Не смогли определить ваш адрес. Выберите ближайший к вам магазин.",
-      [
-        {
-          text: "Выбрать вручную",
-          onPress: () => {
-            handleTabChange(1);
+    if (!storeId) {
+      Alert.alert(
+        "Произошла ошибка.",
+        "Не смогли определить ваш адрес. Выберите ближайший к вам магазин.",
+        [
+          {
+            text: "Выбрать вручную",
+            onPress: () => {
+              handleTabChange(1);
+            },
           },
-        },
-      ],
-    );
+        ],
+      );
 
-    setState((prevState) => ({
-      ...prevState,
-      hasError: true,
-    }));
-  }, [handleTabChange]);
+      setState((prevState) => ({
+        ...prevState,
+        hasError: true,
+      }));
+    }
+  }, [handleTabChange, storeId]);
 
   const handleLocationUpdate = useCallback(
     async (location: Coordinates) => {
@@ -184,115 +185,102 @@ export function UserLocation(props: UserLocationProps) {
   }, [selectedLocation, storesQuery.data?.docs]);
 
   return (
-    <>
-      <Layout style={{ flex: 1 }}>
-        <SafeAreaView style={{ flex: 1 }}>
-          <View style={{ flex: 1, paddingHorizontal: 20 }}>
-            <View style={{ flex: 1 }}>
-              <TabView
-                selectedIndex={state.selectedTabIndex}
-                onSelect={handleTabChange}
-                style={{ flex: 1 }}
+    <Layout style={{ flexGrow: 1 }}>
+      <View style={{ flexGrow: 1, paddingHorizontal: 20 }}>
+        <TabView
+          selectedIndex={state.selectedTabIndex}
+          onSelect={handleTabChange}
+          style={{ flexGrow: 1 }}
+        >
+          <Tab
+            title="Выбрать на карте"
+            icon={(props) => <Icon {...props} name="pin-outline" />}
+            disabled={state.hasError}
+          >
+            <View style={{ flexGrow: 1, paddingTop: 16 }}>
+              <MapStoreSelect
+                location={{
+                  latitude:
+                    selectedLocation?.latitude || DEFAULT_LOCATION.latitude,
+                  longitude:
+                    selectedLocation?.longitude || DEFAULT_LOCATION.longitude,
+                }}
+                stores={storesQuery.data?.docs}
+                onLocationSelect={handleLocationUpdate}
+                onError={handleMapError}
               >
-                <Tab
-                  title="Выбрать на карте"
-                  icon={(props) => <Icon {...props} name="pin-outline" />}
-                  disabled={state.hasError}
-                >
-                  <View style={{ flex: 1, paddingTop: 16 }}>
-                    <MapStoreSelect
-                      location={{
-                        latitude:
-                          selectedLocation?.latitude ||
-                          DEFAULT_LOCATION.latitude,
-                        longitude:
-                          selectedLocation?.longitude ||
-                          DEFAULT_LOCATION.longitude,
+                <View style={{ alignItems: "center" }}>
+                  <View
+                    style={{
+                      position: "absolute",
+                      bottom: 60,
+                      left: 20,
+                      right: 20,
+                    }}
+                  >
+                    <View
+                      style={{
+                        backgroundColor: "white",
+                        padding: 16,
+                        borderRadius: 20,
+                        overflow: "hidden",
                       }}
-                      stores={storesQuery.data?.docs}
-                      onLocationSelect={handleLocationUpdate}
-                      onError={handleMapError}
                     >
-                      <View style={{ alignItems: "center" }}>
-                        <View
-                          style={{
-                            position: "absolute",
-                            bottom: 60,
-                            left: 20,
-                            right: 20,
-                          }}
-                        >
-                          <View
-                            style={{
-                              backgroundColor: "white",
-                              padding: 16,
-                              borderRadius: 20,
-                              overflow: "hidden",
-                            }}
-                          >
-                            {selectedLocation && !state.isLoading ? (
-                              <View style={{ gap: 8 }}>
-                                <Text category="s1">Ближайший магазин:</Text>
+                      {selectedLocation && !state.isLoading ? (
+                        <View style={{ gap: 8 }}>
+                          <Text category="s1">Ближайший магазин:</Text>
 
-                                <Text>
-                                  <Text>{nearestStore?.name}</Text>
-                                  <Text>, </Text>
-                                  <Text appearance="hint">
-                                    {nearestStore?.address}
-                                  </Text>
-                                </Text>
-                                <Text
-                                  status={
-                                    isInDeliveryZone ? "success" : "danger"
-                                  }
-                                >
-                                  {isInDeliveryZone
-                                    ? "Доставка доступна"
-                                    : "Доставка недоступна"}
-                                </Text>
-                              </View>
-                            ) : (
-                              <Text
-                                category="s1"
-                                style={{ textAlign: "center" }}
-                              >
-                                Укажите на карте адрес доставки
-                              </Text>
-                            )}
-                          </View>
+                          <Text>
+                            <Text>{nearestStore?.name}</Text>
+                            <Text>, </Text>
+                            <Text appearance="hint">
+                              {nearestStore?.address}
+                            </Text>
+                          </Text>
+                          <Text
+                            status={isInDeliveryZone ? "success" : "danger"}
+                          >
+                            {isInDeliveryZone
+                              ? "Доставка доступна"
+                              : "Доставка недоступна"}
+                          </Text>
                         </View>
-                      </View>
-                      <View style={{ marginTop: "auto" }}>
-                        <Divider style={{ marginVertical: 16 }} />
-                        <Button
-                          disabled={state.isLoading || !isInDeliveryZone}
-                          onPress={() => {
-                            if (nearestStore?.id) {
-                              handleStoreSelect(nearestStore.id);
-                            }
-                          }}
-                        >
-                          Выбрать магазин
-                        </Button>
-                      </View>
-                    </MapStoreSelect>
+                      ) : (
+                        <Text category="s1" style={{ textAlign: "center" }}>
+                          Укажите на карте адрес доставки
+                        </Text>
+                      )}
+                    </View>
                   </View>
-                </Tab>
-                <Tab
-                  title="Выбрать вручную"
-                  icon={(props) => <Icon {...props} name="list-outline" />}
-                >
-                  <View style={{ flex: 1, paddingTop: 16 }}>
-                    <CustomStoreSelect onStoreSelect={handleStoreSelect} />
-                  </View>
-                </Tab>
-              </TabView>
+                </View>
+                <View style={{ marginTop: "auto", paddingBottom: 16 }}>
+                  <Divider style={{ marginVertical: 16 }} />
+                  <Button
+                    disabled={state.isLoading || !isInDeliveryZone}
+                    onPress={() => {
+                      if (nearestStore?.id) {
+                        handleStoreSelect(nearestStore.id);
+                      }
+                    }}
+                  >
+                    Выбрать магазин
+                  </Button>
+                </View>
+              </MapStoreSelect>
             </View>
-          </View>
-        </SafeAreaView>
-      </Layout>
+          </Tab>
+          <Tab
+            title="Выбрать вручную"
+            icon={(props) => <Icon {...props} name="list-outline" />}
+          >
+            <View style={{ flexGrow: 1, paddingTop: 16 }}>
+              <CustomStoreSelect onStoreSelect={handleStoreSelect} />
+            </View>
+          </Tab>
+        </TabView>
+      </View>
 
       <Loader loading={state.isLoading} />
-    </>
+    </Layout>
   );
 }

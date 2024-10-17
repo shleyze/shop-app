@@ -6,36 +6,23 @@ import { EvaIconsPack } from "@ui-kitten/eva-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { UserLocationModal } from "@/features/UserLocationModal";
-import { OrderModal } from "@/features/OrderModal";
 import { CartInfo } from "@/features/CartInfo";
 import { Header } from "@/components/Header";
-import { useUserStore } from "@/hooks/useUser";
-import { Footer } from "@/components/Footer";
 
 const queryClient = new QueryClient();
 
 export default function Layout() {
-  const storeId = useUserStore((state) => state.storeId);
-
   return (
-    <>
+    <SafeAreaView style={{ flexGrow: 1 }}>
       <IconRegistry icons={EvaIconsPack} />
       <ApplicationProvider {...eva} theme={eva.light}>
         <QueryClientProvider client={queryClient}>
-          <SafeAreaView style={{ flex: 1 }}>
-            <UserLocationModal />
-            <OrderModal />
-
-            {storeId && (
-              <>
-                <Header />
-                <Slot />
-                <CartInfo />
-              </>
-            )}
-          </SafeAreaView>
+          <Header />
+          <Slot />
+          <CartInfo />
+          <UserLocationModal />
         </QueryClientProvider>
       </ApplicationProvider>
-    </>
+    </SafeAreaView>
   );
 }

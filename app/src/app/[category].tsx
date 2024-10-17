@@ -26,27 +26,34 @@ export default function CategoryPage() {
   }, [categoriesQuery.data, category]);
 
   return (
-    <ScrollView>
-      <View
-        style={{
-          flex: 1,
-          paddingHorizontal: 16,
-          gap: 16,
+    <View style={{ flex: 1, flexGrow: 1 }}>
+      <ScrollView
+        contentContainerStyle={{
+          flexGrow: 1,
         }}
       >
-        <View style={{ gap: 8 }}>
-          <Text category="h2">
-            {isRecommendations ? "Рекомендации" : currentCategory?.name}
-          </Text>
-          <Text category="s1" appearance="hint">
-            {isRecommendations
-              ? "Мы собрали для вас самые популярные блюда"
-              : currentCategory?.description}
-          </Text>
+        <View
+          style={{
+            flexGrow: 1,
+            paddingHorizontal: 16,
+            gap: 16,
+          }}
+        >
+          <View style={{ gap: 8 }}>
+            <Text category="h2">
+              {isRecommendations ? "Рекомендации" : currentCategory?.name}
+            </Text>
+            <Text category="s1" appearance="hint">
+              {isRecommendations
+                ? "Мы собрали для вас самые популярные блюда"
+                : currentCategory?.description}
+            </Text>
+          </View>
+
+          <Products products={productsQuery.data?.docs} />
         </View>
-        <Products products={productsQuery.data?.docs} />
-      </View>
-      <Footer />
-    </ScrollView>
+        <Footer />
+      </ScrollView>
+    </View>
   );
 }

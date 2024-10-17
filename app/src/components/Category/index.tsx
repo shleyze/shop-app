@@ -43,8 +43,9 @@ export function Category({ id, title, limit = PRODUCTS_LIMIT }: CategoryProps) {
           </Link>
         ) : null}
       </View>
-
-      <Products products={productsQuery.data?.docs} />
+      <View>
+        <Products products={productsQuery.data?.docs} />
+      </View>
     </View>
   );
 }

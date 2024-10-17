@@ -1,7 +1,7 @@
 import { useForm, Controller } from "react-hook-form";
 import { valibotResolver } from "@hookform/resolvers/valibot";
 import { Input, Button, Text } from "@ui-kitten/components";
-import { View, StyleSheet } from "react-native";
+import { View } from "react-native";
 import { useEffect } from "react";
 
 import { useAuth } from "@/hooks/useAuth";
@@ -40,7 +40,7 @@ export function LoginForm(props: LoginFormProps) {
   };
 
   return (
-    <View style={styles.form}>
+    <View style={{ gap: 16 }}>
       <Controller
         control={control}
         render={({
@@ -84,7 +84,7 @@ export function LoginForm(props: LoginFormProps) {
       />
       {hasError && <Text status="danger">Неверный Логин или Пароль</Text>}
 
-      <View style={styles.actions}>
+      <View style={{ paddingTop: 8 }}>
         <Button disabled={isLoading} onPress={handleSubmit(onSubmit)}>
           Войти
         </Button>
@@ -92,12 +92,3 @@ export function LoginForm(props: LoginFormProps) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  form: {
-    gap: 16,
-  },
-  actions: {
-    paddingTop: 8,
-  },
-});

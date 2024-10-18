@@ -24,7 +24,12 @@ export const Products: CollectionConfig = {
     },
     {
       name: 'description',
-      label: 'Описание',
+      label: 'Краткое Описание',
+      type: 'textarea',
+    },
+    {
+      name: 'description',
+      label: 'Подробное описание',
       type: 'textarea',
     },
     {

@@ -4,8 +4,9 @@ export const Products: CollectionConfig = {
   slug: 'products',
   admin: {
     useAsTitle: 'name',
-    defaultColumns: ['name', 'category', 'price', 'mainImage'],
+    hideAPIURL: true,
   },
+  timestamps: false,
   labels: {
     singular: 'Продукт',
     plural: 'Продукты',
@@ -17,56 +18,62 @@ export const Products: CollectionConfig = {
   fields: [
     {
       name: 'name',
+      label: 'Название',
       type: 'text',
       required: true,
     },
     {
       name: 'description',
+      label: 'Описание',
       type: 'textarea',
     },
     {
       name: 'price',
+      label: 'Цена',
       type: 'number',
       required: true,
     },
     {
       name: 'category',
+      label: 'Категория',
       type: 'relationship',
       relationTo: 'categories',
     },
     {
       name: 'stores',
+      label: 'Магазины',
       type: 'relationship',
       relationTo: 'stores',
       hasMany: true,
     },
     {
       name: 'mainImage',
+      label: 'Главное изображение',
       type: 'upload',
       relationTo: 'media',
       // required: true,
     },
-    {
-      name: 'additionalImages',
-      type: 'array',
-      fields: [
-        {
-          name: 'image',
-          type: 'upload',
-          relationTo: 'media',
-        },
-      ],
-    },
+    // {
+    //   name: 'additionalImages',
+    //   type: 'array',
+    //   fields: [
+    //     {
+    //       name: 'image',
+    //       type: 'upload',
+    //       relationTo: 'media',
+    //     },
+    //   ],
+    // },
 
-    {
-      name: 'inStock',
-      type: 'checkbox',
-      defaultValue: true,
-    },
-    {
-      name: 'sku',
-      type: 'text',
-      unique: true,
-    },
+    // {
+    //   name: 'inStock',
+    //   type: 'checkbox',
+    //   defaultValue: true,
+    // },
+    // {
+    //   name: 'sku',
+    //   type: 'text',
+    //   unique: true,
+    // },
   ],
 }

@@ -4,7 +4,9 @@ export const Categories: CollectionConfig = {
   slug: 'categories',
   admin: {
     useAsTitle: 'name',
+    hideAPIURL: true,
   },
+  timestamps: false,
   labels: {
     singular: 'Категория',
     plural: 'Категории',
@@ -15,11 +17,13 @@ export const Categories: CollectionConfig = {
   fields: [
     {
       name: 'name',
+      label: 'Название',
       type: 'text',
       required: true,
     },
     {
       name: 'description',
+      label: 'Краткое описание',
       type: 'text',
       required: true,
     },

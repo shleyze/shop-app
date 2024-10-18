@@ -1,0 +1,202 @@
+.doc-tab[aria-label='Edit'] {
+  .doc-tab__label {
+    font-size: 0;
+
+    &:before {
+      content: 'Редактировать';
+      font-size: 13px;
+      margin-right: -4px;
+    }
+  }
+}
+
+.btn {
+  &#action-save {
+    .btn__label {
+      font-size: 0;
+      display: flex;
+
+      &:before {
+        content: 'Сохранить';
+        font-size: 13px;
+      }
+    }
+  }
+
+  &[aria-label*='Create new'] {
+    .btn__label {
+      font-size: 0;
+      display: flex;
+
+      &:before {
+        content: 'Создать';
+        font-size: 13px;
+      }
+    }
+  }
+}
+
+.popup-button-list__button {
+  display: flex;
+
+  &#action-create {
+    font-size: 0;
+
+    &:before {
+      content: 'Создать';
+      font-size: 13px;
+    }
+  }
+  &#action-duplicate {
+    font-size: 0;
+
+    &:before {
+      content: 'Дублировать';
+      font-size: 13px;
+    }
+  }
+  &#action-delete {
+    font-size: 0;
+
+    &:before {
+      content: 'Удалить';
+      font-size: 13px;
+    }
+  }
+}
+
+.doc-controls__meta {
+  display: none;
+}
+
+.nav-group {
+  &#nav-group-Collections {
+    .nav-group__label {
+      font-size: 0;
+
+      &:before {
+        content: 'Коллекции';
+        font-size: 13px;
+      }
+    }
+  }
+}
+
+.list-controls__buttons {
+  [aria-controls='list-controls-where'] {
+    display: none;
+  }
+
+  [aria-controls='list-controls-columns'] {
+    .pill__label {
+      font-size: 0;
+      display: flex;
+
+      &:before {
+        content: 'Столбцы';
+        font-size: 13px;
+      }
+    }
+  }
+}
+
+.doc-header__title[title='[Untitled]'] {
+  font-size: 0;
+  &:before {
+    content: 'Без названия';
+    font-size: 32px;
+  }
+}
+
+.field-type.array-field {
+  .array-field__header-actions li {
+    .array-field__header-action[type='button'] {
+      font-size: 0;
+
+      &:before {
+        font-size: 13px;
+      }
+    }
+
+    &:nth-child(1) [type='button']:before {
+      content: 'Свернуть';
+    }
+    &:nth-child(2) [type='button']:before {
+      content: 'Показать';
+    }
+  }
+
+  .array-field__draggable-rows > * {
+    counter-increment: section;
+  }
+
+  .array-field__add-row {
+    .btn__label {
+      font-size: 0;
+      display: flex;
+
+      &:before {
+        content: 'Добавить';
+        font-size: 13px;
+      }
+    }
+  }
+}
+
+.login__form {
+  .field-type {
+    .field-label {
+      font-size: 0;
+
+      &:before,
+      & .required {
+        font-size: 13px;
+      }
+    }
+  }
+
+  .field-type.email .field-label:before {
+    content: 'Почта';
+  }
+  .field-type.password .field-label:before {
+    content: 'Пароль';
+  }
+
+  & > a {
+    font-size: 0;
+
+    &:before {
+      font-size: 13px;
+      content: 'Забыли пароль?';
+    }
+  }
+
+  .form-submit [type='submit'] {
+    .btn__label {
+      font-size: 0;
+
+      &:before {
+        font-size: 13px;
+        content: 'Войти';
+      }
+    }
+  }
+
+  .field-error .tooltip-content {
+    font-size: 0;
+
+    &:before {
+      font-size: 13px;
+      content: 'Введите корректные данные';
+    }
+  }
+}
+
+.toast-error .toast-title {
+  font-size: 0;
+
+  &:before {
+    font-size: 13px;
+    content: 'Что-то пошло не так';
+  }
+}

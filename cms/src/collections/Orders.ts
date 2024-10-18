@@ -4,13 +4,13 @@ import ShortUniqueId from 'short-unique-id'
 
 import { getEmail } from '@/utils/getEmail'
 import type { Order } from '@/payload-types'
+import type { LabelFunction, StaticLabel } from 'payload/dist/config/types'
 
 export const Orders: CollectionConfig = {
   slug: 'orders',
   admin: {
     useAsTitle: 'orderNumber',
-    defaultColumns: ['orderNumber', 'status', 'total', 'createdAt'],
-    listSearchableFields: [],
+    hideAPIURL: true,
   },
   labels: {
     singular: 'Заказ',
@@ -23,6 +23,7 @@ export const Orders: CollectionConfig = {
   fields: [
     {
       name: 'orderNumber',
+      label: 'Номер',
       type: 'text',
       required: true,
       unique: true,
@@ -33,6 +34,7 @@ export const Orders: CollectionConfig = {
     },
     {
       name: 'store',
+      label: 'Магазин',
       type: 'relationship',
       relationTo: 'stores',
       required: true,
@@ -40,17 +42,25 @@ export const Orders: CollectionConfig = {
     },
     {
       name: 'items',
+      label: 'Корзина',
+      labels: {
+        plural: 'Продукта',
+        singular: 'Продукт',
+      },
       type: 'array',
       required: true,
+
       fields: [
         {
           name: 'product',
+          label: 'Продукт',
           type: 'relationship',
           relationTo: 'products',
           required: true,
         },
         {
           name: 'quantity',
+          label: 'Количество',
           type: 'number',
           required: true,
           min: 1,
@@ -59,18 +69,22 @@ export const Orders: CollectionConfig = {
     },
     {
       name: 'total',
+      label: 'Итого',
       type: 'number',
       admin: {
         readOnly: true,
+        description: 'Нельзя редактировать. Высчитывается автоматически',
       },
     },
     {
       name: 'email',
+      label: 'Почта',
       type: 'text',
       required: true,
     },
     {
       name: 'status',
+      label: 'Статус',
       type: 'select',
       options: [
         { label: 'Создан', value: 'new' },
@@ -87,16 +101,19 @@ export const Orders: CollectionConfig = {
     },
     {
       name: 'shippingAddress',
+      label: 'Адрес доставки',
       type: 'text',
       required: true,
     },
     {
       name: 'phoneNumber',
+      label: 'Номер телефона',
       type: 'text',
       required: true,
     },
     {
       name: 'paymentMethod',
+      label: 'Способ оплаты',
       type: 'select',
       options: [
         { label: 'Самовывоз', value: 'self_delivery' },
@@ -107,6 +124,7 @@ export const Orders: CollectionConfig = {
     },
     {
       name: 'paymentStatus',
+      label: 'Статус оплаты',
       type: 'select',
       options: [
         { label: 'Ожидает оплаты', value: 'pending' },
@@ -119,13 +137,17 @@ export const Orders: CollectionConfig = {
     },
     {
       name: 'description',
+      label: 'Комментарий клиента',
       type: 'textarea',
+
       admin: {
         readOnly: true,
+        description: 'Нельзя редактировать',
       },
     },
     {
       name: 'notes',
+      label: 'Внутренние комментарии',
       type: 'textarea',
     },
   ],

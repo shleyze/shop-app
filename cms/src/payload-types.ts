@@ -98,8 +98,6 @@ export interface Store {
       | boolean
       | null;
   };
-  updatedAt: string;
-  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -112,8 +110,6 @@ export interface City {
     latitude: number;
     longitude: number;
   };
-  updatedAt: string;
-  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -127,16 +123,6 @@ export interface Product {
   category?: (string | null) | Category;
   stores?: (string | Store)[] | null;
   mainImage?: (string | null) | Media;
-  additionalImages?:
-    | {
-        image?: (string | null) | Media;
-        id?: string | null;
-      }[]
-    | null;
-  inStock?: boolean | null;
-  sku?: string | null;
-  updatedAt: string;
-  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -146,8 +132,6 @@ export interface Category {
   id: string;
   name: string;
   description: string;
-  updatedAt: string;
-  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

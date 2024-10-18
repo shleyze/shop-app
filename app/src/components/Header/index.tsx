@@ -25,10 +25,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useUserStore } from "@/hooks/useUser";
 import { openUserLocationModal } from "@/features/UserLocationModal";
 import { useStoresQuery } from "@/hooks/useStores";
-
-const UserIcon = (props: IconProps): IconElement => (
-  <Icon {...props} name="person-outline" />
-);
+import { useOrdersStore } from "@/hooks/useOrders";
 
 export function Header() {
   const router = useRouter();
@@ -36,15 +33,16 @@ export function Header() {
 
   const email = useAuth((store) => store.email);
 
-  const [modalVisible, setModalVisible] = useState(false);
+  const orders = useOrdersStore((state) => state.orders);
+  // const [modalVisible, setModalVisible] = useState(false);
   const [canGoBack, setCanGoBack] = useState(false);
-
-  const openModal = () => {
-    setModalVisible(true);
-  };
-  const closeModal = () => {
-    setModalVisible(false);
-  };
+  //
+  // const openModal = () => {
+  //   setModalVisible(true);
+  // };
+  // const closeModal = () => {
+  //   setModalVisible(false);
+  // };
 
   const storesQuery = useStoresQuery();
 
@@ -72,16 +70,25 @@ export function Header() {
     );
   }, [canGoBack, router.canGoBack, router.navigate]);
 
-  const renderRightActions = (): ReactElement => (
-    <>
-      <TopNavigationAction icon={UserIcon} onPress={openModal} />
-    </>
-  );
+  const renderRightActions = useCallback((): ReactElement => {
+    if (orders.length > 1 && pathname.includes("orderHistory") === false) {
+      return (
+        <TopNavigationAction
+          icon={(props) => <Icon {...props} name="shopping-bag-outline" />}
+          onPress={() => {
+            router.push("/orderHistory");
+          }}
+        />
+      );
+    }
+    return <></>;
+  }, [orders, router.push, pathname]);
 
   useEffect(() => {
     setCanGoBack(router.canGoBack());
   }, [pathname, router.canGoBack]);
 
+  console.log("pathname", pathname);
   return (
     <Layout style={{ paddingBottom: 8 }}>
       <TopNavigation
@@ -101,24 +108,24 @@ export function Header() {
           </TouchableOpacity>
         }
         accessoryLeft={renderLeftActions}
-        // accessoryRight={renderRightActions}
+        accessoryRight={renderRightActions}
       />
       <Divider />
 
-      <Modal
-        visible={modalVisible}
-        backdropStyle={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
-        onBackdropPress={closeModal}
-        animationType="fade"
-      >
-        <Card disabled={true} style={{ width: 320 }}>
-          {email ? (
-            <Text>Инфа о пользователе</Text>
-          ) : (
-            <LoginForm afterSuccessSubmit={closeModal} />
-          )}
-        </Card>
-      </Modal>
+      {/*<Modal*/}
+      {/*  visible={modalVisible}*/}
+      {/*  backdropStyle={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}*/}
+      {/*  onBackdropPress={closeModal}*/}
+      {/*  animationType="fade"*/}
+      {/*>*/}
+      {/*  <Card disabled={true} style={{ width: 320 }}>*/}
+      {/*    {email ? (*/}
+      {/*      <Text>Инфа о пользователе</Text>*/}
+      {/*    ) : (*/}
+      {/*      <LoginForm afterSuccessSubmit={closeModal} />*/}
+      {/*    )}*/}
+      {/*  </Card>*/}
+      {/*</Modal>*/}
     </Layout>
   );
 }

@@ -6,6 +6,9 @@ import type {
   GetProductsApiRequest,
   GetProductsApiResponseSuccess,
   GetProductsApiResponseFailure,
+  GetProductApiRequest,
+  GetProductApiResponseSuccess,
+  GetProductApiResponseFailure,
 } from "./types";
 
 export async function getProducts(
@@ -29,4 +32,16 @@ export async function getProducts(
       limit,
     },
   });
+}
+
+export async function getProduct(
+  { productId }: GetProductApiRequest,
+  signal?: GenericAbortSignal,
+) {
+  return client.get<GetProductApiResponseFailure, GetProductApiResponseSuccess>(
+    `products/${productId}`,
+    {
+      signal,
+    },
+  );
 }

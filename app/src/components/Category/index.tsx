@@ -32,7 +32,7 @@ export function Category({ id, title, limit = PRODUCTS_LIMIT }: CategoryProps) {
         productsQuery.data?.totalDocs > PRODUCTS_LIMIT ? (
           <Link
             href={{
-              pathname: "/[category]",
+              pathname: "/category/[category]",
               params: { category: id || "recommendations" },
             }}
             asChild

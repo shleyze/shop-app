@@ -20,7 +20,7 @@ export default function Layout() {
           <Header />
           <Slot />
           <CartInfo />
-          <UserLocationModal />
+          {/*<UserLocationModal />*/}
         </QueryClientProvider>
       </ApplicationProvider>
     </SafeAreaView>

@@ -9,33 +9,35 @@ export default function Page() {
   const categoriesQuery = useCategoriesQuery();
 
   return (
-    <View style={{ flex: 1, flexGrow: 1 }}>
-      <ScrollView
-        contentContainerStyle={{
-          flexGrow: 1,
-        }}
-      >
-        <View
-          style={{
+    <>
+      <View style={{ flex: 1, flexGrow: 1 }}>
+        <ScrollView
+          contentContainerStyle={{
             flexGrow: 1,
-            paddingHorizontal: 16,
-            gap: 32,
           }}
         >
-          <Category title="Рекомендации" />
-          {categoriesQuery.data?.docs.map((category) => {
-            return (
-              <Category
-                key={category.id}
-                id={category.id}
-                title={category.name}
-              />
-            );
-          })}
-        </View>
-        <Footer />
-      </ScrollView>
+          <View
+            style={{
+              flexGrow: 1,
+              paddingHorizontal: 16,
+              gap: 32,
+            }}
+          >
+            <Category title="Рекомендации" />
+            {categoriesQuery.data?.docs.map((category) => {
+              return (
+                <Category
+                  key={category.id}
+                  id={category.id}
+                  title={category.name}
+                />
+              );
+            })}
+          </View>
+          <Footer />
+        </ScrollView>
+      </View>
       <Loader loading={categoriesQuery.isLoading} />
-    </View>
+    </>
   );
 }

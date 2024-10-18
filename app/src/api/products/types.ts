@@ -1,5 +1,6 @@
 import type {
-  AdminResponseSuccess,
+  AdminResponseSuccessItem,
+  AdminResponseSuccessList,
   Category,
   CityStore,
   Product,
@@ -10,5 +11,11 @@ export type GetProductsApiRequest = {
   categoryId?: Category["id"];
   limit?: number;
 };
-export type GetProductsApiResponseSuccess = AdminResponseSuccess<Product>;
+export type GetProductsApiResponseSuccess = AdminResponseSuccessList<Product>;
 export type GetProductsApiResponseFailure = {};
+
+export type GetProductApiRequest = {
+  productId: Product["id"];
+};
+export type GetProductApiResponseSuccess = AdminResponseSuccessItem<Product>;
+export type GetProductApiResponseFailure = {};

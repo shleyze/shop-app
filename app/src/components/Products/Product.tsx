@@ -1,12 +1,14 @@
 import { Image, TouchableOpacity, View } from "react-native";
 import { Icon, Text, useTheme } from "@ui-kitten/components";
 import { useMemo, useState } from "react";
+import { Link } from "expo-router";
 
 import { useCart } from "@/hooks/useCart";
 import { formatPrice } from "@/utils/formatPrice";
 import { Loader } from "@/components/Loader";
 
 import { ProductProps } from "./types";
+import { getImageSrc } from "@/utils/getImageSrc";
 
 export function Product({ product }: ProductProps) {
   const theme = useTheme();
@@ -27,14 +29,7 @@ export function Product({ product }: ProductProps) {
   }, [productsById, product.id]);
 
   const imageSrc = useMemo(() => {
-    if (product.mainImage) {
-      try {
-        return new URL(
-          product.mainImage?.url,
-          product.mainImage?.prefix,
-        ).toString();
-      } catch {}
-    }
+    return getImageSrc(product.mainImage);
   }, [product.mainImage]);
 
   return (
@@ -51,31 +46,36 @@ export function Product({ product }: ProductProps) {
           position: "relative",
         }}
       >
-        <Image
-          style={{
-            aspectRatio: 1,
-            objectFit: "cover",
-            borderRadius: 16,
-            width: "100%",
-            height: "100%",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            position: "absolute",
+        <Link
+          asChild
+          href={{
+            pathname: "/product/[product]",
+            params: { product: product.id },
           }}
-          source={
-            imageSrc
-              ? {
-                  uri: imageSrc,
-                  width: product.mainImage?.width,
-                  height: product.mainImage?.height,
-                }
-              : require("@/assets/product-placeholder.png")
-          }
-          onLoadStart={() => setLoading(true)}
-          onLoad={() => setLoading(false)}
-        />
+          style={{
+            flexGrow: 1,
+          }}
+        >
+          <TouchableOpacity>
+            <Image
+              style={{
+                aspectRatio: 1,
+                objectFit: "cover",
+                borderRadius: 16,
+                width: "100%",
+                height: "100%",
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                position: "absolute",
+              }}
+              source={imageSrc}
+              onLoadStart={() => setLoading(true)}
+              onLoad={() => setLoading(false)}
+            />
+          </TouchableOpacity>
+        </Link>
         <Loader loading={loading} hasBackdropColor={false} />
 
         <View

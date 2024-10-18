@@ -2,7 +2,7 @@ import { createPersistStore } from "@/store";
 
 import type { Store } from "./types";
 
-export const useStore = createPersistStore<
+export const useUserStore = createPersistStore<
   Store,
   Pick<Store, "storeId" | "selectedLocation">
 >(
@@ -14,6 +14,7 @@ export const useStore = createPersistStore<
       nearestCity: undefined,
       nearestStore: undefined,
       isInDeliveryZone: false,
+      userOrderInfo: undefined,
       actions: {
         setStoreId(storeId) {
           setState({ storeId }, false, "setStoreId");
@@ -24,6 +25,9 @@ export const useStore = createPersistStore<
 
         setNearestData(nearestData) {
           setState(nearestData, false, "setNearestData");
+        },
+        setUserOrderInfo(userOrderInfo) {
+          setState({ userOrderInfo }, false, "setUserOrderInfo");
         },
       },
     };

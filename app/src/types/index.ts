@@ -1,3 +1,5 @@
+import { FormData } from "@/features/Order/types";
+
 export type Coordinates = {
   latitude: number;
   longitude: number;
@@ -48,6 +50,7 @@ export type Product = {
   id: string;
   name: string;
   description: string;
+  fullDescription: string;
   price: number;
   category: string;
   stores: CityStore[];
@@ -75,7 +78,23 @@ export type Category = {
   description: string;
 };
 
-export type AdminResponseSuccess<T> = {
+export type Order = {
+  id: string;
+  orderNumber: string;
+  items: {
+    id: string;
+    product: Product;
+    quantity: number;
+  }[];
+  store: CityStore;
+  createdAt: string;
+  updatedAt: string;
+  total: number;
+  paymentStatus: "pending" | "paid" | "failed";
+  status: "new" | "shipped" | "delivered" | "cancelled";
+} & FormData;
+
+export type AdminResponseSuccessList<T> = {
   docs: T[];
   hasNextPage: boolean;
   hasPrevPage: boolean;
@@ -87,3 +106,5 @@ export type AdminResponseSuccess<T> = {
   totalDocs: number;
   totalPages: number;
 };
+
+export type AdminResponseSuccessItem<T> = T;

@@ -4,6 +4,9 @@ import type {
   CreateOrderApiRequest,
   CreateOrderApiResponseFailure,
   CreateOrderApiResponseSuccess,
+  GetOrderApiRequest,
+  GetOrderApiResponseSuccess,
+  GetOrderApiResponseFailure,
 } from "./types";
 
 export async function createOrder(data: CreateOrderApiRequest) {
@@ -11,4 +14,19 @@ export async function createOrder(data: CreateOrderApiRequest) {
     CreateOrderApiResponseFailure,
     CreateOrderApiResponseSuccess
   >("orders", data);
+}
+
+export async function getOrders({ orderNumbers }: GetOrderApiRequest) {
+  return client.get<GetOrderApiResponseFailure, GetOrderApiResponseSuccess>(
+    "orders",
+    {
+      params: {
+        where: {
+          orderNumber: {
+            in: orderNumbers,
+          },
+        },
+      },
+    },
+  );
 }

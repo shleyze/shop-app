@@ -26,11 +26,13 @@ export const Products: CollectionConfig = {
       name: 'description',
       label: 'Краткое Описание',
       type: 'textarea',
+      required: true,
     },
     {
       name: 'fullDescription',
       label: 'Подробное описание',
       type: 'textarea',
+      required: true,
     },
     {
       name: 'price',

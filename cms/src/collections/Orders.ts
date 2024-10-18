@@ -118,7 +118,7 @@ export const Orders: CollectionConfig = {
       options: [
         { label: 'Самовывоз', value: 'self_delivery' },
         { label: 'Наличные при доставке', value: 'cash_on_delivery' },
-        { label: 'Карта при доставке', value: 'cash_on_delivery' },
+        { label: 'Картой при доставке', value: 'card_on_delivery' },
       ],
       required: true,
     },
@@ -130,7 +130,6 @@ export const Orders: CollectionConfig = {
         { label: 'Ожидает оплаты', value: 'pending' },
         { label: 'Оплачено', value: 'paid' },
         { label: 'Ошибка оплаты', value: 'failed' },
-        { label: 'Возвращено', value: 'refunded' },
       ],
       required: true,
       defaultValue: 'pending',

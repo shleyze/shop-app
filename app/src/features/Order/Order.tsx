@@ -19,26 +19,26 @@ import { useCart } from "@/hooks/useCart";
 import { formatPrice } from "@/utils/formatPrice";
 import { FormData } from "@/features/Order/types";
 import { useUserStore } from "@/hooks/useUser";
-import { Loader } from "@/components/Loader";
+import { useCreateOrder } from "@/hooks/useOrders";
 
 import { schema } from "./schema";
 import { paymentMethods } from "./data";
-import { createOrder } from "@/api/order";
 
 export function Order() {
   const [state, setState] = useState<{
-    isLoading: boolean;
     paymentMethodIndex: IndexPath;
   }>({
-    isLoading: false,
     paymentMethodIndex: new IndexPath(0),
   });
 
   const storeId = useUserStore((state) => state.storeId);
+  const userOrderInfo = useUserStore((state) => state.userOrderInfo);
+  const handleSetUserOrderInfo = useUserStore(
+    (state) => state.actions.setUserOrderInfo,
+  );
 
   const cartProducts = useCart((state) => state.products);
   const totalPrice = useCart((state) => state.totalPrice);
-  const handleResetCart = useCart((state) => state.actions.resetCart);
 
   const theme = useTheme();
   const groupedProducts = useMemo(
@@ -51,22 +51,24 @@ export function Order() {
     (state) => state.actions.removeProductFromCart,
   );
 
+  const mutation = useCreateOrder();
+
   const { control, handleSubmit, formState } = useForm<FormData>({
     resolver: valibotResolver(schema),
     defaultValues: {
+      phoneNumber: userOrderInfo?.phoneNumber,
+      shippingAddress: userOrderInfo?.shippingAddress,
+      email: userOrderInfo?.email,
       paymentMethod: paymentMethods[state.paymentMethodIndex.row]?.value,
     },
-    disabled: state.isLoading,
+    disabled: mutation.isPending,
   });
 
   const onSubmit = useCallback(
     async (data: FormData) => {
-      setState((prevState) => ({
-        ...prevState,
-        isLoading: true,
-      }));
+      handleSetUserOrderInfo(data);
 
-      createOrder({
+      mutation.mutate({
         ...data,
         store: storeId!,
         items: groupedProducts.map(({ count, product }) => {
@@ -75,38 +77,9 @@ export function Order() {
             quantity: count,
           };
         }),
-      })
-        .then((res) => {
-          Alert.alert(
-            "Заказ успешно создан",
-            `Номер вашего заказа #${res.doc.orderNumber} Подробности прислали вам на почту`,
-            [
-              {
-                text: "Спасибо",
-                onPress: () => handleResetCart(),
-              },
-            ],
-          );
-        })
-        .catch(() => {
-          Alert.alert(
-            "Что-то пошло не так",
-            `Пожалуйста, попробуйте оформить заказ позже.`,
-            [
-              {
-                text: "Хорошо",
-              },
-            ],
-          );
-        })
-        .finally(() => {
-          setState((prevState) => ({
-            ...prevState,
-            isLoading: false,
-          }));
-        });
+      });
     },
-    [handleResetCart],
+    [mutation.mutate],
   );
 
   return (
@@ -251,6 +224,7 @@ export function Order() {
                 placeholder="Ваша email"
                 label="Почта"
                 value={value}
+                autoCapitalize="none"
                 onChangeText={onChange}
                 onBlur={onBlur}
                 inputMode="email"
@@ -300,8 +274,8 @@ export function Order() {
                   caption={formState.errors?.[name]?.message}
                   disabled={disabled}
                 >
-                  {paymentMethods?.map(({ label }) => {
-                    return <SelectItem title={label} />;
+                  {paymentMethods?.map(({ value, label }) => {
+                    return <SelectItem key={value} title={label} />;
                   })}
                 </Select>
               );
@@ -341,7 +315,7 @@ export function Order() {
         >
           <Button
             disabled={
-              state.isLoading || Object.keys(formState.errors).length > 0
+              mutation.isPending || Object.keys(formState.errors).length > 0
             }
             onPress={handleSubmit(onSubmit)}
           >
@@ -349,7 +323,6 @@ export function Order() {
           </Button>
         </View>
       </ScrollView>
-      <Loader loading={state.isLoading} />
     </>
   );
 }

@@ -1,5 +1,5 @@
-import type { AdminResponseSuccess, CityStore } from "@/types";
+import type { AdminResponseSuccessList, CityStore } from "@/types";
 
 export type GetStoresApiRequest = {};
-export type GetStoresApiResponseSuccess = AdminResponseSuccess<CityStore>;
+export type GetStoresApiResponseSuccess = AdminResponseSuccessList<CityStore>;
 export type GetStoresApiResponseFailure = {};

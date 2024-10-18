@@ -22,12 +22,13 @@ export default function OrderHistoryPage() {
       <View style={{ flex: 1, flexGrow: 1 }}>
         <ScrollView>
           <View style={{ padding: 16, gap: 36 }}>
+            <Text category="h4">Ваши заказы</Text>
             {ordersQuery.data?.docs?.map((order, index) => {
               return (
                 <Fragment key={order.id}>
                   {index > 0 && <Divider />}
                   <View style={{ gap: 8 }}>
-                    <Text category="h5">#{order.orderNumber}</Text>
+                    <Text category="h6">#{order.orderNumber}</Text>
                     <View
                       style={{
                         flexDirection: "row",
